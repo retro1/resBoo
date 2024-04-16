@@ -30,6 +30,12 @@ func TestAuth(t *testing.T) {
 	if err != nil {
 		fmt.Println("Error Host reply:", err)
 	}
-	fmt.Println(string(rep))
+	var data map[string]interface{}
+	err = json.Unmarshal(rep, &data)
+	if err != nil {
+		fmt.Println("Error JSON unmarshal:", err)
+	}
+	jsonForm, err := json.MarshalIndent(data, "", "\t")
+	fmt.Printf("Received JSON:\n%s%s", string(jsonForm), "\n")
 
 }
