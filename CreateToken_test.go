@@ -10,7 +10,6 @@ import (
 )
 
 func TestAuth(t *testing.T) {
-	//Инициализация переменной с конвертацией структуры в формат JSON
 	reqBody, err := json.Marshal(map[string]string{
 		"username": "admin",
 		"password": "password123",
@@ -19,19 +18,14 @@ func TestAuth(t *testing.T) {
 		fmt.Println("Error to JSON encode:", err)
 	}
 
-	//Создание POST запроса с указанием URL, content-type и 'содержимое буфера?' или 'байтового среза?' reqBody
 	req, err := http.Post("https://restful-booker.herokuapp.com/auth", "application/json", bytes.NewBuffer(reqBody))
-	if err != nil {
-		fmt.Println("Error POST request:", err)
-		return
+	if req.StatusCode != http.StatusOK {
+		fmt.Println("Error to HTTP request:", req.StatusCode)
 	} else {
-		fmt.Println("POST request successfully")
+		fmt.Println("Success HTTP request:", req.Proto, req.Status)
 	}
-
-	//Гарантированное завершение функции request
 	defer req.Body.Close()
 
-	//Чтение ответа сервера
 	rep, err := io.ReadAll(req.Body)
 	if err != nil {
 		fmt.Println("Error Host reply:", err)
