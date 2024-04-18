@@ -1,4 +1,4 @@
-package main
+package Test_Tasks
 
 import (
 	"encoding/json"
@@ -9,9 +9,10 @@ import (
 )
 
 func TestGetBooking(t *testing.T) {
-	req, err := http.NewRequest("GET", "https://restful-booker.herokuapp.com/booking/3", nil)
+	req, err := http.NewRequest("GET", "https://restful-booker.herokuapp.com/booking/1", nil)
 	if err != nil {
-		fmt.Println("Error Get request:", err)
+		t.Error("Error Get request:", err)
+		return
 	}
 
 	req.Header.Add("Accept", "application/json")
@@ -19,20 +20,23 @@ func TestGetBooking(t *testing.T) {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if resp.StatusCode != http.StatusOK {
-		fmt.Println("Error Get request:", resp.StatusCode)
+		t.Error("Error Get request:", resp.StatusCode)
+		return
 	} else {
-		fmt.Println("Success:", resp.Proto, resp.Status)
+		t.Log("Success:", resp.Proto, resp.Status)
 	}
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Println("Error reading response:", err)
+		t.Error("Error reading response:", err)
+		return
 	}
 	var data map[string]interface{}
 	err = json.Unmarshal(body, &data)
 	if err != nil {
-		fmt.Println("Error JSON unmarshal:", err)
+		t.Error("Error JSON unmarshal:", err)
+		return
 	}
 	jsonF, _ := json.MarshalIndent(data, "", "\t")
 	fmt.Printf("Received JSON:\n%s%s", string(jsonF), "\n")
