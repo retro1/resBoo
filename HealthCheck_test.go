@@ -1,7 +1,6 @@
 package Test_Tasks
 
 import (
-	"fmt"
 	"net/http"
 	"testing"
 )
@@ -9,9 +8,10 @@ import (
 func TestHealCheck(t *testing.T) {
 	req, _ := http.Get("https://restful-booker.herokuapp.com/ping")
 	if req.StatusCode != http.StatusCreated {
-		fmt.Println("Error:", req.StatusCode)
+		t.Error("Error:", req.StatusCode)
+		return
 	} else {
-		fmt.Println("Ok", req.Proto, req.StatusCode)
+		t.Log("Ok", req.Proto, req.StatusCode)
 	}
 	defer req.Body.Close()
 
