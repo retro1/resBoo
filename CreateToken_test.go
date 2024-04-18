@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-func TestAuth(t *testing.T) {
+func TestCreateTok(t *testing.T) {
 	reqBody, err := json.Marshal(map[string]string{
 		"username": "admin",
 		"password": "password123",
