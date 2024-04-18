@@ -21,12 +21,14 @@ func TestUpdBoo(t *testing.T) {
 
 	reqBody, err := json.Marshal(book)
 	if err != nil {
-		fmt.Println("Can`t Marshal to JSON:", err)
+		t.Error("Can`t Marshal to JSON:", err)
+		return
 	}
 
-	req, err := http.NewRequest("PUT", "https://restful-booker.herokuapp.com/booking/2", bytes.NewBuffer(reqBody))
+	req, err := http.NewRequest("PUT", "https://restful-booker.herokuapp.com/booking/1", bytes.NewBuffer(reqBody))
 	if err != nil {
-		fmt.Println("Error Get request:", err)
+		t.Error("Error Get request:", err)
+		return
 	}
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept", "application/json")
@@ -35,20 +37,23 @@ func TestUpdBoo(t *testing.T) {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if resp.StatusCode != http.StatusOK {
-		fmt.Println("Error to HTTP request:", resp.StatusCode)
+		t.Error("Error to HTTP request:", resp.StatusCode)
+		return
 	} else {
-		fmt.Println("Success HTTP request:", resp.Proto, resp.Status)
+		t.Log("Success HTTP request:", resp.Proto, resp.Status)
 	}
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Println("Error Host reply:", err)
+		t.Error("Error Host reply:", err)
+		return
 	}
 	var data map[string]interface{}
 	err = json.Unmarshal(body, &data)
 	if err != nil {
-		fmt.Println("Error JSON unmarshal:", err)
+		t.Error("Error JSON unmarshal:", err)
+		return
 	}
 	jsonForm, err := json.MarshalIndent(data, "", "\t")
 	fmt.Printf("Received JSON:\n%s%s", string(jsonForm), "\n")
